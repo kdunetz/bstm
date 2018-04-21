@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="BB_INFORMATIONLAYOUT">
+		<message>
+			<![CDATA[BB_INFORMATIONLAYOUTDESC]]>
+		</message>
+	</layout>
+	<state>
+		<name>BB_INFORMATIONLAYOUT</name>
+		<description>BB_INFORMATIONLAYOUTDESC</description>
+	</state>
+</metadata>

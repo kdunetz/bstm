@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="CM_REQUESTLOGINLAYOUT">
+		<message>
+			<![CDATA[CM_REQUESTLOGINLAYOUTDESC]]>
+		</message>
+	</layout>
+	<state>
+		<name>CM_REQUESTLOGINLAYOUT</name>
+		<description>CM_REQUESTLOGINLAYOUTDESC</description>
+	</state>
+</metadata>

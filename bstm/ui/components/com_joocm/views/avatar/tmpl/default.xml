@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="CM_AVATARLAYOUT">
+		<message>
+			<![CDATA[CM_AVATARLAYOUTDESC]]>
+		</message>
+	</layout>
+	<state>
+		<name>CM_AVATARLAYOUT</name>
+		<description>CM_AVATARLAYOUTDESC</description>
+	</state>
+</metadata>

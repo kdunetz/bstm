@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="BB_SEARCHLAYOUT">
+		<message>
+			<![CDATA[BB_SEARCHLAYOUTDESC]]>
+		</message>
+	</layout>
+	<state>
+		<name>BB_SEARCHLAYOUT</name>
+		<description>BB_SEARCHLAYOUTDESC</description>
+		<params>
+		</params>
+	</state>
+</metadata>

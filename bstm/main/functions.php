@@ -1,0 +1,776 @@
+<?php
+global $user_zone_id, $user_id, $user_name, $current_location, $first_name, $role, $zipcode, $totalSavings, $location_filter, $override_redirect, $email;
+
+  function cs($var, $default) {
+    if (is_null($var))
+       return $default;
+    else
+       return trim($var);
+  }
+
+  function sqlToUserDate($date) {
+     if (strlen($date) == 0) return "";
+
+     $var = substr($date,5,2) . "/" . substr($date,8,2) . "/" . substr($date,0,4);
+
+     if ($var == '00/00/0000') $var = '';
+
+     if (strlen($var) > 3)
+        return $var;
+
+     return "";
+  }
+
+/* 10/24/1967 */
+  function usertoSQLDate($date) {
+
+     if (stripos($date, "/") == false) return "";
+
+     $month = strtok($date, "/");
+     $day = strtok("/");
+     $year = strtok("/");
+     
+     return $year . "-" . $month . "-" . $day;
+  }
+
+  function displayField($str,$fieldType,$fieldFormat) {
+     if ($fieldType == 'DATETIME') return sqlToUserDate($str);
+     if (isset($fieldFormat)) 
+     {
+        if (strpos($fieldFormat, ".") != false)
+        {
+           $position = strpos($fieldFormat, ".");
+           echo substr($str,$position + 1);
+           $str = number_format($str,2);
+        }
+
+        if (substr($fieldFormat,0,1) == '$')
+          $str = "$" . $str;
+     }
+     return $str;
+  }
+
+  function print_coupon_details($coupon) {
+     echo sqlToUserDate($coupon['end_date']);
+  }
+
+  function getContent($tab, $subtab, $user_id)
+  {
+     //global $user_id;
+     if ($tab == 1 || $tab == 3)
+     {
+        if ($subtab == 1) 
+        {
+           $filter = " AND (product_type = 'Food' OR product_type is null)";
+        }
+        if ($subtab == 2) 
+        {
+           $filter = " AND product_type = 'Clothes'";
+        }
+        if ($subtab == 3) 
+        {
+           $filter = " AND product_type = 'Electronics'";
+        }
+     }
+     if ($tab == 1)  
+     {
+        if (isset($_GET['action']) && ($_GET['action'] == 'search')) 
+        {
+           if (isset($_POST['userString'])) 
+           {
+              $filter .= " AND (coupon_name LIKE '%" . $_POST['userString'] . "%' OR product_name LIKE '%" . $_POST['userString'] . "%')";
+      /* echo $filter; */
+           }
+        }
+        $id = $_GET['id'];
+      
+        tep_db_connect();
+        /* $objects_query = tep_db_query("select * from coupon, product WHERE coupon.product_id = product.product_id AND product_type = 'Food'"  . $filter); */
+         $objects_query = tep_db_query("select * from coupon, product WHERE coupon.product_id = product.product_id AND end_date >= now()"  . $filter . " ORDER BY end_date"); 
+        $rows = 0;
+        while ($objects = tep_db_fetch_array($objects_query)) 
+        {
+           $rows++;
+      
+           $packaging_size = $objects['packaging_size'];
+           $packaging_size = str_replace(".0000", "", $packaging_size);
+           $variable = $objects['packaging_quantity'] . " ". $packaging_size . " " . $objects['packaging_units'] . " " . $objects['packaging_type'];  
+      
+           if ($objects['packaging_quantity'] != "" && $objects['packaging_quantity'] != 1) $variable .= "s";
+      
+           /* clean up bad data before it is displayed */
+           if (str_replace(" ", "", $variable) == "00s") $variable = "";
+      
+           echo "<div class=\"uip"; if ($rows == 1) echo " first"; if ($rows == sizeof($objects)) echo " last"; echo "\"><table class=\"template single two-column\" onclick=\"location.href='home.php?action=detail&id=" . $objects['coupon_id'] . "'\"><tr><td class=\"icon\" width=\"24\"><span class=\"title\">" . $rows . ")</span></td><td class=\"right\">
+           
+           <table class=\"template\"><tr><td class=\"title-cell\"><div class=\"uic small first\"> <span class=\"title\">" . $objects['product_name'] . "</span><br/> 
+           <span class=\"small\">" . $variable;  echo "</span> </div></td>
+           <td class=\"value-cell\"><div class=\"uic small first\"> <span><strong>Save $" . $objects['discount'] . "</strong></span><br/> <span class=\"positive\">Expires " . sqltoUserDate($objects['end_date']) . "</span> </div></td></tr></table></td></tr></table></div>";
+           if ($id == $objects['coupon_id']) print_coupon_details($objects);
+        }
+      
+        if ($rows == 0)
+        {
+           //echo "</div>";
+           echo "<div class=\"uip first\"><table class=\"items\"><tr><td class=\"blocks\" align=center><div class=\"uic small first\"> <strong>No Results</strong> </div></span> </div></td></tr></table></div>";
+         //return;
+        }
+        if ($rows > 0 && isset($_GET['action']) && ($_GET['action'] == 'search')) 
+        {
+           //return;
+        }
+     }
+     if ($tab == 2)  
+     {
+        if (isset($_GET['action']) && ($_GET['action'] == 'search')) 
+        {
+           if (isset($_POST['userString'])) 
+           {
+              $filter .= " AND (sale_name LIKE '%" . $_POST['userString'] . "%' OR store_name LIKE '%" . $_POST['userString'] . "%')";
+      /* echo $filter; */
+           }
+        }
+        $filter .= " AND (store.zone_id = " . $user_zone_id . " OR store.zone_id = 54)";
+      
+        $objects_query = tep_db_query("select sale.*, store.store_name from sale, store WHERE sale.store_id = store.store_id AND end_date >= now()" . $filter . " ORDER BY end_date");
+        $rows = 0;
+        while ($objects = tep_db_fetch_array($objects_query)) 
+        {
+           $rows++;
+      
+           if ($objects['packaging_quantity'] != "" && $objects['packaging_quantity'] != 1) echo "s"; 
+      
+           echo "<div class=\"uip"; if ($rows == 1) echo " first"; if ($rows == sizeof($objects)) echo " last"; echo "\"><table class=\"template single two-column\" onclick=\"location.href=''\"><tr><td class=\"icon\" width=\"24\"><span class=\"title\">" . $rows . ")</span></td><td class=\"right\">
+      
+           <table class=\"template\"><tr><td class=\"title-cell\"><div class=\"uic small first\"> <span class=\"title\">" . $objects['sale_name'] . "</span><br/> 
+      <span class=\"small\">" . $objects['packaging_quantity'] ." ". $objects['packaging_size'] . " " . $objects['packaging_units'] . " " . $objects['packaging_type'];  if ($objects['packaging_quantity'] != "" && $objects['packaging_quantity'] != 1) echo "s";  echo "</span> </div></td>
+      <td class=\"value-cell\"><div class=\"uic small first\"> <span><strong>Starts " . sqlToUserDate($objects['begin_date']) . "</strong></span><br/> <span class=\"positive\">Ends " . sqltoUserDate($objects['end_date']) . "</span> </div></td></tr></table></td></tr></table></div>";
+        }
+        if ($rows == 0)
+        {
+           //echo "</div>";
+           echo "<div class=\"uip first\"><table class=\"items\"><tr><td class=\"blocks\" align=center><div class=\"uic small first\"> <strong>No Results</strong> </div></span> </div></td></tr></table></div>";
+         //return;
+        }
+        if ($rows > 0 && isset($_GET['action']) && ($_GET['action'] == 'search')) 
+        {
+           //return;
+        }
+     }
+     if ($tab == 3)  
+     {
+        if (isset($_GET['action']) && ($_GET['action'] == 'search')) 
+        {
+           if (isset($_POST['userString'])) 
+           {
+              $filter .= " AND (product_name LIKE '%" . $_POST['userString'] . "%' OR status LIKE '%" . $_POST['userString'] . "%')";
+      /* echo $filter; */
+           }
+        }
+        if (isset($_GET['action']) && ($_GET['action'] == 'update_field'))
+        {
+            tep_db_query("UPDATE shopping_list SET " . $_GET['field'] . "= '" .  $_GET['value'] . "' WHERE shopping_list_id = " . $_GET['shopping_list_id']);
+            if (isset($_POST['redirect_url']))
+            {
+                tep_redirect(tep_href_link($_POST['redirect_url'],'','SSL'));
+            }
+        }
+#$objects['product_id'] = '';$select_query = tep_db_query("SELECT product_id as _key, concat(vendor_name, ' ', product_name)  as value FROM product,vendor WHERE product.vendor_id = vendor.vendor_id ORDER BY product_name");
+        $objects_query = tep_db_query("select * from shopping_list, product, vendor WHERE product.vendor_id = vendor.vendor_id AND shopping_list.product_id = product.product_id AND shopping_list.user_id = " . $user_id . $filter . " ORDER BY status DESC");
+        $rows = 0;
+        while ($objects = tep_db_fetch_array($objects_query)) 
+        {
+           $rows++;
+      
+           $variable = $objects['packaging_quantity'] ." ". $objects['packaging_size'] . " " . $objects['packaging_units'] . " " . $objects['packaging_type'];  
+      
+           echo "<div class=\"uip"; if ($rows == 1) echo " first"; if ($rows == sizeof($objects)) echo " last"; echo "\">";
+           echo "
+           <table class=\"template single two-column\" onclick=\"location.href=''\">
+           <tr>
+             <td class=\"icon\" width=\"24\"><span class=\"title\">"; echo $rows; echo ")</span></td>
+             <td class=\"right\">
+             <table class=\"template\">
+             <tr>
+               <td class=\"title-cell\"><div class=\"uic small first\"> <span class=\"title\">" . $objects['vendor_name'] . " " . $objects['product_name'] . "</span></div></td>
+               <td class=\"value-cell\"><div class=\"uic small first\"> <span><strong>"; 
+
+           if (!isset($objects['status']))  
+              $objects['status'] = "Got"; 
+
+           if ($objects['status'] == 'Need')
+           {
+              echo "<a href=shopping_list.php?action=update_field&tab=" . $tab . "&subtab=" . $subtab . "&field=status&value=Got&shopping_list_id=" . $objects['shopping_list_id'] . "#" . $objects['shopping_list_id'] . ">";
+           }
+           else
+           {
+              echo "<a href=shopping_list.php?action=update_field&tab=" . $tab . "&subtab=" . $subtab . "&field=status&value=Need&shopping_list_id=" . $objects['shopping_list_id'] . "#" . $objects['shopping_list_id'] . ">";
+           }
+           echo $objects['status']; 
+           echo "</a></strong></span></div></td>
+             </tr>
+             </table>
+             </td>
+           </tr>
+           </table></div> <!- uip ->";
+        }
+      
+        if ($rows == 0)
+        {
+           //echo "</div>";
+           echo "<div class=\"uip first\"><table class=\"items\"><tr><td class=\"blocks\" align=center><div class=\"uic small first\"> <strong>No Results</strong> </div></span> </div></td></tr></table></div>";
+         //return;
+        }
+        if ($rows > 0 && isset($_GET['action']) && ($_GET['action'] == 'search')) 
+        {
+           //return;
+        }
+     }
+  }
+
+  function tableInserts($table,$userid,$zoneid,$zipcode) {
+     $dropStatement = "DROP TABLE IF EXISTS " . $table . "\n";
+     $createStatement = "CREATE VIRTUAL TABLE " . $table . " USING fts3 (";
+
+     $sqlCommand = "SELECT * FROM " . $table;
+     if (!empty($userid))
+        $sqlCommand .= " WHERE user_id = " . $userid;
+     if (!empty($zoneid))
+        $sqlCommand .= " AND zone_id = " . $zoneid;
+     if (!empty($zipcode))
+        $sqlCommand .= " AND zipcode = " . $zipcode;
+//     $sqlCommand .= " limit 0, 10";
+
+     $objects_query = tep_db_query($sqlCommand);
+     $rows = 0;
+  while ($objects = tep_db_fetch_array($objects_query)) 
+  {
+     $rows++;
+     $keys = "";
+     $values = "";
+     $insertStatement = "INSERT INTO " . $table . "(";
+     foreach($objects as $key=>$value) {
+         //echo "$key: $value<br>";
+         if ($key == 'limit') $key = "_limit";
+         $keys .= strtoupper($key) . ",";
+         $values .= "'" . str_replace("'","''",$value) . "',";
+     }
+     $insertStatement .= substr($keys,0,strlen($keys)-1) . ") VALUES (" . substr($values,0,strlen($values) - 1);
+     $insertStatement .= ")\n"; 
+     $createStatement .= substr($keys,0,strlen($keys)-1) . ")\n";
+     if ($rows == 1)
+     {
+         echo $dropStatement;
+         echo $createStatement;
+     }
+     echo $insertStatement;
+   }
+  }
+  function lastSaleDay($user_id, $sale_id, $store_name)
+  {
+     $htmlbody .= "<p><h4>Sales Items At " . $store_name . "</h4></p>";
+     $objects_query = tep_db_query("select sale.*, sale_line_item.*, product.product_name, vendor.vendor_name, store.store_name, datediff(end_date,curdate()) days_left from sale, sale_line_item, product, vendor, my_stores, store WHERE sale.store_id = store.store_id AND my_stores.store_id = sale.store_id AND my_stores.user_id = " . $user_id . " AND sale_line_item.product_id = product.product_id AND product.vendor_id = vendor.vendor_id AND sale.sale_id = sale_line_item.sale_id AND datediff(end_date,curdate()) >= 0 AND sale.sale_id = " . $sale_id . " ORDER BY end_date");
+     $htmlbody .= printSaleItemsTable($user_id, $objects_query);
+     return $htmlbody;
+  }
+  function printSaleItemsTable($user_id, $objects_query)
+  {
+     $htmlbody .= "<table width=\"100%\" class=contenttoc><tr><td class=sectiontableheader align=center><b>Sale</b></td><td class=sectiontableheader align=center><b>Product</b></td><td class=sectiontableheader align=center><b>Price</b></td><td class=sectiontableheader align=center><b>Best Price</b></td><td class=sectiontableheader align=center><b>End Date</b></td><td class=sectiontableheader align=center><b>Days Left</b></td></tr>\n";
+     while ($objects = tep_db_fetch_array($objects_query)) 
+     {
+        $rows++;
+
+        $bgcolor = "";
+        if ($objects['days_left'] <= 3)
+           $bgcolor = " bgcolor=red";
+
+        $best_price = getBestPrice($objects['product_id'], $objects['product_name'], $location_filter); 
+
+        $bestPriceLink = displayField($best_price['price'],"NUMBER","$###,###.00") . "/" . $best_price['price_units'] . (strlen($best_price['cost_per_unit_units']) > 0 && $best_price['cost_per_unit_units'] != "Pound"?" - " . $best_price['cost_per_unit'] . "/" . $best_price['cost_per_unit_units']:"");
+
+        $price = "";
+
+        if ($objects['price'] == 0) 
+           $price = $objects['special_promotion'];
+        else
+           $price = ($objects['discount_units'] == 'Dollars' || $objects['price'] != 0?"$":"") . displayField($objects['price'],"NUMBER","###,###.00") . "/" . $objects['price_units'];
+
+        $vendorName = $objects['vendor_name'];
+        $productName = $objects['product_name'];
+        if ($vendorName == "Any") $vendorName = "";
+        //if ($productName == "Any") $productName = "";
+        $productName = $vendorName . " " . $productName;
+
+        $htmlbody .= "<tr" . $bgcolor . "><td class=bstm_td align=center><a href=http://www.bringsavingstome.com/bstm/main/index.php?view=sale_line_item&action=display&sale_line_item_id=" . $objects['sale_line_item_id'] . ">" . $objects['store_name'] . "</a></td><td class=bstm_td align=center>" . $productName  . "</td><td class=bstm_td align=right>" . $price . "</td><td class=bstm_td align=right>" . $bestPriceLink . "</td><td class=bstm_td align=center>" . sqlToUserDate($objects['end_date']) . "</td><td class=bstm_td align=center>" . $objects['days_left'] . "</td></tr>\n";
+     }
+     if ($rows == 0)
+     {
+         $htmlbody .= "<tr><td class=bstm_td colspan=5 align=center>No Results</td></tr>\n";
+     }
+     $htmlbody .= "</table>\n";
+     return $htmlbody;
+  }
+  function dailyDeals($user_id)
+  {
+     global $totalSavings, $location_filter;
+     $totalSavings = 0;
+
+     $rows = 0;
+     $htmlbody .= "<p><h4>Sales Ending Soon</h4></p>";
+     $objects_query = tep_db_query("select sale.*, sale_line_item.*, product.product_name, vendor.vendor_name, store.store_name, datediff(end_date,curdate()) days_left from sale, sale_line_item, shopping_list, product, vendor, my_stores, store WHERE sale.store_id = store.store_id AND my_stores.store_id = sale.store_id AND my_stores.user_id = " . $user_id . " AND shopping_list.user_id = " . $user_id . " AND sale_line_item.product_id = shopping_list.product_id AND sale_line_item.product_id = product.product_id AND product.vendor_id = vendor.vendor_id AND sale.sale_id = sale_line_item.sale_id AND datediff(end_date,curdate()) >= 0 ORDER BY end_date");
+     $htmlbody .= printSaleItemsTable($user_id, $objects_query);
+
+     $htmlbody .= "<br><br>";
+
+     $rows = 0;
+     $htmlbody .= "<h4>Deals Ending Soon</h4>";
+
+     $objects_query = tep_db_query("select *, datediff(end_date,curdate()) days_left from deal, source WHERE deal.source_id = source.source_id AND datediff(end_date,curdate()) < 100 AND datediff(end_date,curdate()) >= 0 ORDER BY end_date");
+     $htmlbody .= "<table width=\"100%\" class=contenttoc><tr><td class=sectiontableheader align=center><b>Source</b></td><td class=sectiontableheader align=center><b>Deal</b></td><td class=sectiontableheader align=center><b>Savings</b></td></td><td class=sectiontableheader align=center><b>Location</b></td></tr>\n";
+     while ($objects = tep_db_fetch_array($objects_query)) 
+     {
+
+        $bgcolor = "";
+/*
+        if ($objects['days_left'] <= 3)
+           $bgcolor = " bgcolor=red";
+*/
+
+        $location = $objects['location'];
+
+
+        if (strlen($location) > 0 && strpos($location_filter, $location) !== false)
+        {
+           $totalSavings += $objects['savings_amount'];
+           $htmlbody .= "<tr" . $bgcolor . "><td class=bstm_td>" . $objects['source_name'] . "</td><td class=bstm_td align=center><a href=http://www.bringsavingstome.com/bstm/main/index.php?view=deal&title=" . urlencode($objects['deal_name']) . "&action=display&deal_id=" . $objects['deal_id'] . ">" . $objects['deal_name'] . "</a></td><td class=bstm_td align=right>$" . $objects['savings_amount'] . "</td><td class=bstm_td align=center>" . $objects['location'] . "</td></tr>\n";
+           $rows++;
+        }
+     }
+     if ($rows == 0)
+     {
+         $htmlbody .= "<tr><td class=bstm_td colspan=5 align=center>No Results</td></tr>\n";
+     }
+     $htmlbody .= "</table>\n";
+     $htmlbody .= "\n";
+
+    return $htmlbody;
+  }
+
+  function savingsDashboard($user_id)
+  {
+     global $totalSavings, $location_filter;
+     $totalSavings = 0;
+
+     $rows = 0;
+     $htmlbody .= "<p><h4>Sales Ending Soon</h4></p>";
+     //$objects_query = tep_db_query("select sale.*, sale_line_item.*, product.product_name, datediff(end_date,curdate()) days_left from sale, sale_line_item, shopping_list, product, vendor, my_stores WHERE my_stores.store_id = sale.store_id AND my_stores.user_id = " . $user_id . " AND shopping_list.user_id = " . $user_id . " AND sale_line_item.product_id = shopping_list.product_id AND sale_line_item.product_id = product.product_id AND product.vendor_id = vendor.vendor_id AND sale.sale_id = sale_line_item.sale_id AND datediff(end_date,curdate()) < 10 AND datediff(end_date,curdate()) >= 0 ORDER BY end_date");
+     $objects_query = tep_db_query("select sale.*, sale_line_item.*, product.product_name, vendor.vendor_name, store.store_name, datediff(end_date,curdate()) days_left from sale, sale_line_item, shopping_list, product, vendor, my_stores, store WHERE sale.store_id = store.store_id AND my_stores.store_id = sale.store_id AND my_stores.user_id = " . $user_id . " AND shopping_list.user_id = " . $user_id . " AND sale_line_item.product_id = shopping_list.product_id AND sale_line_item.product_id = product.product_id AND product.vendor_id = vendor.vendor_id AND sale.sale_id = sale_line_item.sale_id AND datediff(end_date,curdate()) >= 0 ORDER BY end_date");
+     $htmlbody .= "<table width=\"100%\" class=contenttoc><tr><td class=sectiontableheader align=center><b>Sale</b></td><td class=sectiontableheader align=center><b>Product</b></td><td class=sectiontableheader align=center><b>Price</b></td><td class=sectiontableheader align=center><b>Best Price</b></td><td class=sectiontableheader align=center><b>End Date</b></td><td class=sectiontableheader align=center><b>Days Left</b></td></tr>\n";
+     while ($objects = tep_db_fetch_array($objects_query)) 
+     {
+        $rows++;
+
+        $bgcolor = "";
+        if ($objects['days_left'] <= 3)
+           $bgcolor = " bgcolor=red";
+
+        $best_price = getBestPrice($objects['product_id'], $objects['product_name'], $location_filter); 
+
+        $bestPriceLink = displayField($best_price['price'],"NUMBER","$###,###.00") . "/" . $best_price['price_units'] . (strlen($best_price['cost_per_unit_units']) > 0 && $best_price['cost_per_unit_units'] != "Pound"?" - " . $best_price['cost_per_unit'] . "/" . $best_price['cost_per_unit_units']:"");
+
+        $price = "";
+
+        if ($objects['price'] == 0) 
+           $price = $objects['special_promotion'];
+        else
+           $price = ($objects['discount_units'] == 'Dollars' || $objects['price'] != 0?"$":"") . displayField($objects['price'],"NUMBER","###,###.00") . "/" . $objects['price_units'];
+
+        $vendorName = $objects['vendor_name'];
+        $productName = $objects['product_name'];
+        if ($vendorName == "Any") $vendorName = "";
+        //if ($productName == "Any") $productName = "";
+        $productName = $vendorName . " " . $productName;
+
+        $htmlbody .= "<tr" . $bgcolor . "><td class=bstm_td align=center><a href=http://www.bringsavingstome.com/bstm/main/index.php?view=sale_line_item&action=display&sale_line_item_id=" . $objects['sale_line_item_id'] . ">" . $objects['store_name'] . "</a></td><td class=bstm_td align=center>" . $productName  . "</td><td class=bstm_td align=right>" . $price . "</td><td class=bstm_td align=right>" . $bestPriceLink . "</td><td class=bstm_td align=center>" . sqlToUserDate($objects['end_date']) . "</td><td class=bstm_td align=center>" . $objects['days_left'] . "</td></tr>\n";
+     }
+     if ($rows == 0)
+     {
+         $htmlbody .= "<tr><td class=bstm_td colspan=6 align=center>No Results</td></tr>\n";
+     }
+     $htmlbody .= "</table>\n";
+
+     $htmlbody .= "<br><br>";
+
+     $rows = 0;
+     $objects_query = tep_db_query("select *, datediff(end_date,curdate()) days_left from coupon, product, vendor, shopping_list WHERE coupon.product_id = product.product_id AND product.vendor_id = vendor.vendor_id AND coupon.product_id = shopping_list.product_id AND product.product_name != 'Any' AND shopping_list.user_id = " . $user_id . " AND datediff(end_date,curdate()) >= 0 AND (coupon.user_id = " . $user_id . " OR coupon.user_id IS NULL OR coupon.user_id = 0) ORDER BY end_date");
+     $htmlbody .= "<h4>Coupons For Things I Need/Want</h4>\n";
+     $htmlbody .= "<table width=\"100%\" class=contenttoc><tr><td class=sectiontableheader align=center><b>Coupon</b></td><td class=sectiontableheader align=center><b>Vendor/Brand</b></td><td class=sectiontableheader align=center><b>Discount</b></td><td class=sectiontableheader align=center><b>End Date</b></td><td class=sectiontableheader align=center><b>Days Left</b></td></tr>\n";
+     while ($objects = tep_db_fetch_array($objects_query)) 
+     {
+        $rows++;
+
+        $bgcolor = "";
+        if ($objects['days_left'] <= 3)
+           $bgcolor = " bgcolor=red";
+
+        if ($objects['discount_units'] == 'Dollars')
+           $totalSavings += $objects['discount'];
+
+        $htmlbody .= "<tr" . $bgcolor ."><td class=bstm_td align=center><a href=http://www.bringsavingstome.com/bstm/main/index.php?view=coupon&title=" . urlencode($objects['coupon_name']) . "&action=display&coupon_id=" . $objects['coupon_id'] . ">" . $objects['coupon_name'] . "</a></td><td class=bstm_td>" . $objects['vendor_name'] . " " . $objects['product_name'] . "</td><td class=bstm_td align=right>" . ($objects['discount_units'] == 'Dollars'?"$":"") . $objects['discount'] . ($objects['discount_units'] == 'Percent'?"%":"") . "</td><td class=bstm_td align=center>". sqlToUserDate($objects['end_date']) . "</td><td class=bstm_td align=center>" . $objects['days_left'] . "</td></tr>\n";
+     }
+     if ($rows == 0)
+     {
+         $htmlbody .= "<tr><td class=bstm_td colspan=5 align=center>No Results</td></tr>";
+     }
+     $htmlbody .= "</table>";
+
+     $htmlbody .= "<br><br>";
+
+     $rows = 0;
+
+     $objects_query = tep_db_query("select *, datediff(end_date,curdate()) days_left from coupon, store, my_stores WHERE store.store_id = my_stores.store_id AND coupon.store_id = store.store_id  AND my_stores.user_id = " . $user_id . " AND datediff(end_date,curdate()) >= 0 AND (coupon.user_id = " . $user_id . " OR coupon.user_id IS NULL OR coupon.user_id = 0) ORDER BY end_date");
+
+     $htmlbody .= "<h4>Coupons For Places I Shop/Eat/Buy</h4>\n";
+     $htmlbody .= "<table width=\"100%\" class=contenttoc><tr><td class=sectiontableheader align=center><b>Coupon</b></td><td class=sectiontableheader align=center><b>Store/Restaurant/Service</b></td><td class=sectiontableheader align=center><b>Discount</b></td><td class=sectiontableheader align=center><b>End Date</b></td><td class=sectiontableheader align=center><b>Days Left</b></td></tr>\n";
+     while ($objects = tep_db_fetch_array($objects_query)) 
+     {
+        $rows++;
+
+        $bgcolor = "";
+        if ($objects['days_left'] <= 3)
+           $bgcolor = " bgcolor=red";
+
+        if ($objects['discount_units'] == 'Dollars')
+           $totalSavings += $objects['discount'];
+
+        $htmlbody .= "<tr" . $bgcolor ."><td class=bstm_td align=center><a href=http://www.bringsavingstome.com/bstm/main/index.php?view=coupon&title=" . urlencode($objects['coupon_name']) . "&action=display&coupon_id=" . $objects['coupon_id'] . ">" . $objects['coupon_name'] . "</a></td><td class=bstm_td>" . $objects['store_name'] . "</td><td class=bstm_td align=right>" . ($objects['discount_units'] == 'Dollars'?"$":"") . $objects['discount'] . ($objects['discount_units'] == 'Percent'?"%":"") . "</td><td class=bstm_td align=center>". sqlToUserDate($objects['end_date']) . "</td><td class=bstm_td align=center>" . $objects['days_left'] . "</td></tr>\n";
+     }
+     if ($rows == 0)
+     {
+         $htmlbody .= "<tr><td class=bstm_td colspan=5 align=center>No Results</td></tr>";
+     }
+     $htmlbody .= "</table>";
+     $htmlbody .= "<br><br>";
+
+$objects_query = tep_db_query("select *, datediff(end_date,curdate()) days_left from coupon c " .
+"LEFT JOIN store ON c.store_id = store.store_id " .
+"LEFT JOIN product ON c.product_id = product.product_id " . 
+"LEFT JOIN vendor ON product.vendor_id = vendor.vendor_id WHERE datediff(end_date,curdate()) < 10 AND datediff(end_date,curdate()) >= 0 AND (user_id = " . $user_id . " OR user_id IS NULL OR user_id = 0) ORDER BY end_date");
+
+     $htmlbody .= "<h4>Coupons Expiring Soon</h4>\n";
+     $htmlbody .= "<table width=\"100%\" class=contenttoc><tr><td class=sectiontableheader align=center><b>Coupon</b></td><td class=sectiontableheader align=center><b>Vendor/Brand</b></td><td class=sectiontableheader align=center><b>Discount</b></td><td class=sectiontableheader align=center><b>End Date</b></td><td class=sectiontableheader align=center><b>Days Left</b></td></tr>\n";
+     $rows = 0;
+     while ($objects = tep_db_fetch_array($objects_query)) 
+     {
+        $rows++;
+
+        $bgcolor = "";
+        if ($objects['days_left'] <= 3)
+           $bgcolor = " bgcolor=red";
+
+        $vendorName = $objects['vendor_name'];
+        $productName = $objects['product_name'];
+        $storeName = $objects['store_name'];
+        if ($vendorName == "Any") $vendorName = "";
+        if ($productName == "Any") $productName = "";
+        
+        $vendorBrand = $vendorName . " " . $productName . (strlen($storeName) > 0?" at " . $storeName:"");
+
+        if ($objects['discount_units'] == 'Dollars')
+           $totalSavings += $objects['discount'];
+
+        $htmlbody .= "<tr" . $bgcolor ."><td class=bstm_td align=center><a href=http://www.bringsavingstome.com/bstm/main/index.php?view=coupon&title=" . urlencode($objects['coupon_name']) . "&action=display&coupon_id=" . $objects['coupon_id'] . ">" . $objects['coupon_name'] . "</a></td><td class=bstm_td>" . $vendorBrand . "</td><td class=bstm_td align=right>" . ($objects['discount_units'] == 'Dollars'?"$":"") . $objects['discount'] . ($objects['discount_units'] == 'Percent'?"%":"") . "</td><td class=bstm_td align=center>". sqlToUserDate($objects['end_date']) . "</td><td class=bstm_td align=center>" . $objects['days_left'] . "</td></tr>\n";
+     }
+     if ($rows == 0)
+     {
+         $htmlbody .= "<tr><td class=bstm_td colspan=5 align=center>No Results</td></tr>";
+     }
+     $htmlbody .= "</table>";
+
+     $htmlbody .= "<p><p>";
+
+     $rows = 0;
+     $htmlbody .= "<h4>Deals Ending Soon</h4>";
+
+     $objects_query = tep_db_query("select *, datediff(end_date,curdate()) days_left from deal, source WHERE deal.source_id = source.source_id AND datediff(end_date,curdate()) < 100 AND datediff(end_date,curdate()) >= 0 ORDER BY end_date");
+     $htmlbody .= "<table width=\"100%\" class=contenttoc><tr><td class=sectiontableheader align=center><b>Source</b></td><td class=sectiontableheader align=center><b>Deal</b></td><td class=sectiontableheader align=center><b>Savings</b></td><td class=sectiontableheader align=center><b>End Date</b></td><td class=sectiontableheader align=center><b>Days Left</b></td></tr>\n";
+     while ($objects = tep_db_fetch_array($objects_query)) 
+     {
+
+        $bgcolor = "";
+/*
+        if ($objects['days_left'] <= 3)
+           $bgcolor = " bgcolor=red";
+*/
+
+        $location = $objects['location'];
+
+        if ($objects['discount_units'] == 'Dollars')
+           $totalSavings += $objects['savings'];
+
+        if (strlen($location) > 0 && strpos($location_filter, $location) !== false)
+        {
+           $htmlbody .= "<tr" . $bgcolor . "><td class=bstm_td>" . $objects['source_name'] . "</td><td class=bstm_td align=center><a href=http://www.bringsavingstome.com/bstm/main/index.php?view=deal&title=" . urlencode($objects['deal_name']) . "&action=display&deal_id=" . $objects['deal_id'] . ">" . $objects['deal_name'] . "</a></td><td class=bstm_td align=right>$" . $objects['savings_amount'] . "</td><td class=bstm_td align=center>" . sqlToUserDate($objects['end_date']) . "</td><td class=bstm_td align=center>" . $objects['days_left'] . "</td></tr>\n";
+           $rows++;
+        }
+     }
+     if ($rows == 0)
+     {
+         $htmlbody .= "<tr><td class=bstm_td colspan=5 align=center>No Results</td></tr>\n";
+     }
+     $htmlbody .= "</table>\n";
+     $htmlbody .= "\n";
+
+    return $htmlbody;
+  }
+function insertFaceBookLike($url)
+{
+   if (strlen($url) == 0)
+      $url = selfURL();
+   echo "<div class=\"module\">
+   <script src=\"http://connect.facebook.net/en_US/all.js#xfbml=1\"></script><fb:like href=\"" . $url . "\" layout=\"button_count\" show_faces=\"false\" width=\"200\"></fb:like>
+   </div>\n";
+}
+function selfURL() {
+	$s = empty($_SERVER["HTTPS"]) ? ''
+		: ($_SERVER["HTTPS"] == "on") ? "s"
+		: "";
+	$protocol = strleft(strtolower($_SERVER["SERVER_PROTOCOL"]), "/").$s;
+	$port = ($_SERVER["SERVER_PORT"] == "80") ? ""
+		: (":".$_SERVER["SERVER_PORT"]);
+	return $protocol."://".$_SERVER['SERVER_NAME'].$port.$_SERVER['REQUEST_URI'];
+}
+function strleft($s1, $s2) {
+	return substr($s1, 0, strpos($s1, $s2));
+}
+function printBestPrices($product_id)
+{
+
+echo "<p>\n<div class=\"componentheading\">Best Prices</div>\n";
+global $location_filter;
+     $sqlCommand = "SELECT 'product_best_price' as _table, product_best_price.product_best_price_id as _id, store.store_name, product_best_price.price, price_units, price_date as date, product_best_price.cost_per_unit, product_best_price.cost_per_unit_units, '' as special_promotion FROM product_best_price, product, store WHERE product_best_price.product_id = product.product_id AND product_best_price.store_id = store.store_id AND product_best_price.product_id = " . $product_id . " AND '" . $location_filter . "' LIKE concat('%',location,'%')";
+     $sqlCommand .= " UNION SELECT 'sale_line_item' as _table, sale_line_item.sale_line_item_id as _id, store.store_name, sale_line_item.price, price_units, end_date AS date, sale_line_item.cost_per_unit, sale_line_item.cost_per_unit_units, sale_line_item.special_promotion FROM sale, sale_line_item, store WHERE sale.sale_id = sale_line_item.sale_id AND sale.store_id = store.store_id AND sale_line_item.product_id = " . $product_id . "";
+     $sqlCommand .= " UNION SELECT 'coupon' as _table, coupon.coupon_id as _id, store.store_name, coupon.discount, discount_units as price_units, end_date AS date, '' as cost_per_unit, '' as cost_per_unit_units, '' as special_promotion FROM coupon LEFT JOIN store on coupon.store_id = store.store_id WHERE coupon.product_id = " . $product_id . " AND coupon.discount_type = 'P' ORDER BY date DESC";
+     $objects_query = tep_db_query($sqlCommand);
+  $rows = 0;
+  echo "<table class=contenttoc border=1 width=\"100%\">\n";
+  echo "<tr><td class=sectiontableheader align=center><b>Store</b></td><td class=sectiontableheader align=center><b>Date</b></td><td class=sectiontableheader align=center><b>Price</b></td></tr>\n";
+while ($objects = tep_db_fetch_array($objects_query))
+{
+   $rows++;
+   $link = "<a href=index.php?view=" . $objects['_table'] . "&action=display&" . $objects['_table'] . "_id=" . $objects['_id'] . ">";
+   if ($objects['price'] > 0)
+   {
+      if ($objects['cost_per_unit_units'] != $objects['price_units'])
+         $price = displayField($objects['price'],'NUMBER','$###,###.00') . "/" . $objects['price_units'] . "<br>" . (strlen($objects['cost_per_unit_units']) > 0 && $objects['cost_per_unit_units'] != 'Each'?$objects['cost_per_unit'] . "/" . $objects['cost_per_unit_units']:"");
+      else
+         $price = displayField($objects['price'],'NUMBER','$###,###.00') . "/" . $objects['price_units'];
+   }
+   else
+      $price = $objects['special_promotion'];
+
+   echo "<td class=bstm_td>" . displayField($objects['store_name'],'STRING','') . "</td><td class=bstm_td>" . displayField(sqlToUserDate($objects['date']),'STRING','') . "</td><td class=bstm_td>" . $link . $price . "</a></td></tr>\n";
+}
+  if ($rows == 0)
+  {
+     echo "<tr><td class=bstm_td colspan=3 align=center>No Results</td></tr>\n";
+  }
+  echo "</table>\n";
+}
+function getDirectoryList ($directory) 
+  {
+
+    // create an array to hold directory list
+    $results = array();
+
+    // create a handler for the directory
+    $handler = opendir($directory);
+
+    // open directory and walk through the filenames
+    while ($file = readdir($handler)) {
+
+      // if file isn't this directory or its parent, add it to the results
+      if ($file != "." && $file != "..") {
+        $results[] = $file;
+      }
+
+    }
+
+    // tidy up: close the handler
+    closedir($handler);
+
+    // done!
+    return $results;
+
+  }
+function getBestPrice($product_id, $product_name, $location_filter)
+{
+     $product_name = str_replace("'","''", $product_name);
+     $best_price_query = tep_db_query("SELECT 'Best Price' as price_source, product_best_price.product_best_price_id, store.store_name, product_best_price.price, price_units, price_date as date, product_best_price.cost_per_unit, product_best_price.cost_per_unit_units FROM product_best_price, product, store WHERE product_best_price.product_id = product.product_id AND product_best_price.store_id = store.store_id AND product_best_price.product_id = " . $product_id . " AND '" . $location_filter . "' LIKE concat('%',location,'%') AND product_best_price.price > 0 UNION SELECT 'Sale' as price_source, sale_line_item_id as product_best_price_id, store.store_name, sale_line_item.price, price_units, end_date AS date, sale_line_item.cost_per_unit, sale_line_item.cost_per_unit_units FROM sale, sale_line_item, store WHERE sale.sale_id = sale_line_item.sale_id AND sale.store_id = store.store_id AND sale_line_item.product_id = " . $product_id . " AND sale_line_item.price > 0 UNION SELECT 'Best Price' as price_source, product_best_price.product_best_price_id, store.store_name, product_best_price.price, price_units, price_date as date, product_best_price.cost_per_unit, product_best_price.cost_per_unit_units FROM product_best_price, product, store WHERE product_best_price.store_id = store.store_id AND product_best_price_name LIKE '%" . $product_name . "%' AND product_best_price.price > 0 ORDER BY price");
+     $best_price = tep_db_fetch_array($best_price_query);
+     return $best_price;
+}
+function add_date($givendate,$day=0,$mth=0,$yr=0) 
+{
+      $cd = strtotime($givendate);
+      $newdate = date('Y-m-d h:i:s', mktime(date('h',$cd),
+    date('i',$cd), date('s',$cd), date('m',$cd)+$mth,
+    date('d',$cd)+$day, date('Y',$cd)+$yr));
+      return $newdate;
+}
+function sqlQuery($query)
+{
+    return sqlQueryAdvanced($query, false);
+}
+function sqlQueryAdvanced($query, $forEmail)
+{
+     $select_query = tep_db_query($query);
+     $html = "";
+     if (!$forEmail) 
+     {
+        $tableStyle = "class=\"contenttoc\"";
+        $headerStyle = "class=\"sectiontableheader\"";
+        $rowStyle = "class=\"bstm_td\"";
+     }
+     else
+     {
+/*
+table.contenttoc {
+  margin: 10px;
+  border: 1px solid #ccc;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+  * padding: 1px; *
+  float: right;
+}
+*/
+        $tableStyle = "style=margin: 10px; border: 1px solid #ccc; border-collapse: collapse; margin-bottom: 10px; float: right";
+     }
+     $html .= "<table " . $tableStyle . " width=\"100%\">\n";
+     while ($select = tep_db_fetch_array($select_query))
+     {
+        $row++;
+        $data = $select;
+        if ($row == 1)
+        {
+           $html .= "<tr>";
+           while(list($key,$value) = each($data)) 
+           {
+               $html .= "<td " . $headerStyle . " align=\"center\">" . $key . "</td>";
+           }
+           $html .= "</tr>\n";
+        }
+        $data = $select;
+        $html .= "<tr>";
+        while(list($key,$value) = each($data)) 
+        {
+           $html .= "<td " . $rowStyle . ">" . $value . "</td>";
+        }
+        $html .= "</tr>\n";
+     }
+     $html .= "</table>\n";
+     return $html;
+}
+function registerUserGlobalParameters($email_address)
+{
+   global $location_filter;
+   $check_user_query = tep_db_query("select *, concat(first_name, ' ', last_name) as user_name FROM user where email = '" . tep_db_input($email_address) . "'");
+   if (!tep_db_num_rows($check_user_query)) 
+   {
+      $error = true;
+   } 
+   else 
+   {
+      $check_user = tep_db_fetch_array($check_user_query);
+
+      $user_id = $check_user['user_id'];
+      $user_name = $check_user['user_name'];
+      $first_name = $check_user['first_name'];
+      $zipcode = $check_user['zipcode'];
+      $role = $check_user['role'];
+      $email = $check_user['email'];
+      $location_filter = $check_user['location'];
+      $location_filter .= "," . $check_user['location2'];
+      $location_filter .= "," . $check_user['location3'];
+      $location_filter .= "," . $check_user['location4'];
+      $location_filter .= "," . $check_user['location5'];
+      //tep_session_register('user_id');
+      //tep_session_register('user_name');
+      //tep_session_register('first_name');
+      //tep_session_register('zipcode');
+      //tep_session_register('location_filter');
+      //tep_session_register('role');
+      //tep_session_register('email');
+      
+      //tep_db_query("update user set date_of_last_login = now(), number_of_logins = number_of_logins + 1 where user_id = '" . (int)$user_id . "'");
+   }
+}
+
+function createProductSelect($product_id)
+{
+echo "<select name=product_id>\n";
+echo "<option>\n";
+//$select_query = tep_db_query("SELECT product_id as _key, concat(vendor_name, ' ', product_name)  as value FROM product,vendor WHERE product.vendor_id = vendor.vendor_id ORDER BY product_name");
+$select_query = tep_db_query("SELECT product_id as _key, concat(vendor_name, ' ', product_name)  as value FROM product,vendor WHERE product.vendor_id = vendor.vendor_id AND vendor_name != 'Any' UNION SELECT product_id as _key, concat(vendor_name, ' ', product_name)  as value FROM product,vendor WHERE product.vendor_id = vendor.vendor_id AND vendor_name = 'Any' ORDER BY value");
+while ($select = tep_db_fetch_array($select_query))
+{
+   $rows++;
+   if (strpos($select['value'], "Any ") !== false) /* KAD added to take off the any to make it easier to search */
+   {
+      $select['value'] = substr($select['value'], 4);
+   }
+   echo "<option value=\"" . $select['_key'] . "\""; if ($product_id == $select['_key']) echo " SELECTED"; echo ">" . $select['value'];
+}
+echo "</select>\n";
+}
+function printAddThisButton()
+{
+   echo "<!-- AddThis Button BEGIN -->\n";
+   echo "<div class=\"addthis_toolbox addthis_default_style \">\n";
+   echo "<a class=\"addthis_button_preferred_1\"></a>\n";
+   echo "<a class=\"addthis_button_preferred_2\"></a>\n";
+   echo "<a class=\"addthis_button_preferred_3\"></a>\n";
+   echo "<a class=\"addthis_button_preferred_4\"></a>\n";
+   echo "<a class=\"addthis_button_compact\"></a>\n";
+   echo "<a class=\"addthis_counter addthis_bubble_style\"></a>\n";
+   echo "</div>\n";
+   echo "<script type=\"text/javascript\" src=\"http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4e51a5651402d491\"></script>\n";
+   echo "<!-- AddThis Button END -->\n";
+}
+function sendEmail($from, $to, $subject, $textbody, $htmlbody)
+{
+   $semi_rand = md5(time());
+   $mime_boundary = "==MULTIPART_BOUNDARY_$semi_rand";
+   $mime_boundary_header = chr(34) . $mime_boundary . chr(34);
+   
+$body = "not sure why this is here
+
+--$mime_boundary
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+
+$textbody
+
+--$mime_boundary
+Content-Type: text/html; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+
+$htmlbody
+
+--$mime_boundary--";
+
+     $headers = "MIME-Version: 1.0" . "\r\n"; 
+  //   $headers .= "Content-type: text/html; charset=iso-8859-1" . "\r\n"; 
+     $headers .= "Content-type: multipart/alternative; boundary=" . $mime_boundary_header . "\r\n";
+     $headers .= 'From: ' . $from . "\r\n";
+
+   
+     if (mail($to, $subject, $body, $headers)) {
+        echo("<p>Message successfully sent to "  . $to . "</p>");
+      } 
+      else {
+        echo("<p>Message delivery failed..." . $to . "</p>");
+     }
+}
+
+?>

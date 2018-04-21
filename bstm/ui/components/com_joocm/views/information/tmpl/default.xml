@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="CM_INFORMATIONLAYOUT">
+		<message>
+			<![CDATA[CM_INFORMATIONLAYOUTDESC]]>
+		</message>
+	</layout>
+	<state>
+		<name>CM_INFORMATIONLAYOUT</name>
+		<description>CM_INFORMATIONLAYOUTDESC</description>
+	</state>
+</metadata>

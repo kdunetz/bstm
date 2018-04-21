@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="BB_LATESTPOSTSLAYOUT">
+		<message>
+			<![CDATA[BB_LATESTPOSTSLAYOUTDESC]]>
+		</message>
+	</layout>
+	<state>
+		<name>BB_LATESTPOSTSLAYOUT</name>
+		<description>BB_LATESTPOSTSLAYOUTDESC</description>
+	</state>
+</metadata>

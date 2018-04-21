@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="CM_PROFILELAYOUT">
+		<message>
+			<![CDATA[CM_PROFILELAYOUTDESC]]>
+		</message>
+	</layout>
+	<state>
+		<name>CM_PROFILELAYOUT</name>
+		<description>CM_PROFILELAYOUTDESC</description>
+	</state>
+</metadata>

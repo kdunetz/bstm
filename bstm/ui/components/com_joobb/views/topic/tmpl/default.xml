@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="BB_TOPICLAYOUT">
+		<message>
+			<![CDATA[BB_TOPICLAYOUTDESC]]>
+		</message>
+	</layout>
+	<state>
+		<name>BB_TOPICLAYOUT</name>
+		<description>BB_TOPICLAYOUTDESC</description>
+		<params>
+		</params>
+	</state>
+</metadata>

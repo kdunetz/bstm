@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="BB_SUBSCRIPTIONLAYOUT">
+		<message>
+			<![CDATA[BB_SUBSCRIPTIONLAYOUTDESC]]>
+		</message>
+	</layout>
+	<state>
+		<name>BB_SUBSCRIPTIONLAYOUT</name>
+		<description>BB_SUBSCRIPTIONLAYOUTDESC</description>
+	</state>
+</metadata>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="CM_MAINPAGELAYOUT">
+		<message>
+			<![CDATA[CM_MAINPAGELAYOUTDESC]]>
+		</message>
+	</layout>
+	<state>
+		<name>CM_MAINPAGELAYOUT</name>
+		<description>CM_MAINPAGELAYOUTDESC</description>
+	</state>
+</metadata>

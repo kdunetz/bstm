@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install version="1.5" type="component">
+	<name>Captcha Settings</name>
+	<author>Joo!BB Project</author>
+	<copyright>(C) 2007-2010 Joo!BB. All rights reserved.</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<authorEmail>n/a</authorEmail>
+	<authorUrl>http://www.joobb.org</authorUrl>
+	<version>1.0.0</version>
+	<description>Parameters for individual Captcha Configuration</description>
+	<params>
+		<param name="character_set" type="text" size="80" default="ABCDEFGHJKLMNPRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789" label="CM_CHARACTERSET" description="CM_CHARACTERSETDESC" />
+		<param name="@spacer" type="spacer" default="" label="" description="" />
+		<param name="captcha_login" type="radio" default="1" label="CM_CAPTCHALOGIN" description="CM_CAPTCHALOGINDESC">
+			<option value="0">CM_NO</option>
+			<option value="1">CM_YES</option>
+		</param>
+		<param name="captcha_register" type="radio" default="1" label="CM_CAPTCHAREGISTER" description="CM_CAPTCHAREGISTERDESC">
+			<option value="0">CM_NO</option>
+			<option value="1">CM_YES</option>
+		</param>
+		<param name="captcha_requestlogin" type="radio" default="1" label="CM_CAPTCHAREQUESTLOGIN" description="CM_CAPTCHAREQUESTLOGINDESC">
+			<option value="0">CM_NO</option>
+			<option value="1">CM_YES</option>
+		</param>
+	</params>
+</install>

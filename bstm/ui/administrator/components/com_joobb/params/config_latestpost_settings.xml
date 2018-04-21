@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install version="1.5" type="component">
+	<name>Latest Posts Configuration</name>
+	<author>Joo!BB Project</author>
+	<copyright>(C) 2007-2010 Joo!BB. All rights reserved.</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<authorEmail>n/a</authorEmail>
+	<authorUrl>http://www.joobb.org</authorUrl>
+	<version>1.0.0</version>
+	<description>Parameters for individual Latest Posts Configuration</description>
+	<params>
+		<param name="enable_filter" type="radio" default="1" label="BB_ENABLELATESTPOSTSFILTER" description="BB_ENABLELATESTPOSTSFILTERDESC">
+			<option value="0">BB_NO</option>
+			<option value="1">BB_YES</option>
+		</param>
+		<param name="latest_post_hours" type="text" size="50" default="8,12" label="BB_LATESTPOSTHOURS" description="BB_LATESTPOSTHOURSDESC" />
+		<param name="latest_post_days" type="text" size="50" default="1,2,3" label="BB_LATESTPOSTDAYS" description="BB_LATESTPOSTDAYSDESC" />
+		<param name="latest_post_weeks" type="text" size="50" default="1" label="BB_LATESTPOSTWEEKS" description="BB_LATESTPOSTWEEKSDESC" />
+		<param name="latest_post_months" type="text" size="50" default="1,6" label="BB_LATESTPOSTMONTHS" description="BB_LATESTPOSTMONTHSDESC" />
+		<param name="latest_post_years" type="text" size="50" default="1" label="BB_LATESTPOSTYEARS" description="BB_LATESTPOSTYEARSDESC" />
+	</params>
+</install>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install type="plugin" version="1.5" group="search" client="both" method="upgrade">
+	<name>Search - Joo!BB Forum</name>
+	<author>Joo!BB Project</author>
+	<creationDate>September 2009</creationDate>
+	<copyright>(C) 2007-2009 Joo!BB Project. All rights reserved.</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<authorEmail>n/a</authorEmail>
+	<authorUrl>http://www.joobb.org</authorUrl>
+	<version>1.0.0</version>
+	<description>Joo!BB - Search Plugin</description>
+	<files>
+		<filename plugin="joobb">joobb.php</filename>
+	</files>
+	<params>
+		<param name="search_limit" type="text" size="5" default="50" label="SEARCHLIMIT" description="SEARCHLIMITDESC"/>
+ 		<param name="convert_bb_to_html" type="radio" default="1" label="CONVERTBBTOHTML" description="CONVERTBBTOHTMLDESC">
+ 			<option value="0">NO</option>
+ 			<option value="1">YES</option>
+ 		</param>
+	</params>
+</install>

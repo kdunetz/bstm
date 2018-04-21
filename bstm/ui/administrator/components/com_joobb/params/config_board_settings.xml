@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install version="1.5" type="component">
+	<name>Board Configuration</name>
+	<author>Joo!BB Project</author>
+	<copyright>(C) 2007-2010 Joo!BB. All rights reserved.</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<authorEmail>n/a</authorEmail>
+	<authorUrl>http://www.joobb.org</authorUrl>
+	<version>1.0.0</version>
+	<description>Parameters for individual Board Configuration</description>
+	<params addpath="/administrator/components/com_joobb/elements/">
+		<param name="board_name" type="text" size="50" default="" label="BB_BOARDNAME" description="BB_BOARDNAMEDESC" />
+		<param name="breadcrumb_index" type="text" size="50" default="" label="BB_BREADCRUMBINDEX" description="BB_BREADCRUMBINDEXDESC" />
+		<param name="description" type="textarea" cols="30" rows="5" default="" label="BB_DESCRIPTION" description="BB_DESCRIPTIONDESC" />
+		<param name="keywords" type="textarea" cols="30" rows="5" default="" label="BB_KEYWORDS" description="BB_KEYWORDSDESC" />
+		<param name="@spacer" type="spacer" default="" label="" description="" />
+		<param name="published" type="radio" default="1" label="BB_PUBLISHED" description="BB_BOARDSETTINGSPUBLISHEDDESC">
+			<option value="0">BB_NO</option>
+			<option value="1">BB_YES</option>
+		</param>
+		<param name="@spacer" type="spacer" default="" label="" description="" />
+		<param name="flood_interval" type="text" size="5" default="10" label="BB_FLOODINTERVAL" description="BB_FLOODINTERVALDESC" />
+		<param name="@spacer" type="spacer" default="" label="" description="" />
+		<param name="topics_per_page" type="text" size="5" default="10" label="BB_TOPICSPERPAGE" description="BB_TOPICSPERPAGEDESC" />
+		<param name="posts_per_page" type="text" size="5" default="10" label="BB_POSTSPERPAGE" description="BB_BOARDSETTINGSPOSTSPERPAGEDESC" />
+		<param name="search_results_per_page" type="text" size="5" default="10" label="BB_SEARCHRESULTSPERPAGE" description="BB_SEARCHRESULTSPERPAGEDESC" />
+		<param name="items_per_page" type="text" size="5" default="10" label="BB_ITEMSPERPAGE" description="BB_ITEMSPERPAGEDESC" />
+		<param name="breadcrumb_max_length" type="text" size="5" default="50" label="BB_BREADCRUMBMAXLENGTH" description="BB_BREADCRUMBMAXLENGTHDESC" />
+		<param name="guest_time" type="text" size="5" default="30" label="BB_GUESTTIME" description="BB_GUESTTIMEDESC" />
+		<param name="@spacer" type="spacer" default="" label="" description="" />
+		<param name="latest_items_count" type="text" size="50" default="5" label="BB_LATESTITEMSCOUNT" description="BB_LATESTITEMSCOUNTDESC" />
+		<param name="latest_items_type" type="list" size="50" default="0" label="BB_LATESTITEMSTYPE" description="BB_LATESTITEMSTYPEDESC">
+			<option value="0">BB_TOPICS</option>
+			<option value="1">BB_POSTS</option>
+		</param>
+		<param name="exclude_categories" type="joobbcategories" default="" label="BB_EXCLUDECATEGORIES" description="BB_EXCLUDECATEGORIESDESC" />
+		<param name="@spacer" type="spacer" default="" label="" description="" />
+		<param name="enable_bbcode" type="radio" default="1" label="BB_ENABLEBBCODE" description="BB_ENABLEBBCODEDESC">
+			<option value="0">BB_NO</option>
+			<option value="1">BB_YES</option>
+		</param>
+		<param name="enable_emotions" type="radio" default="1" label="BB_ENABLEEMOTIONS" description="BB_ENABLEEMOTIONSDESC">
+			<option value="0">BB_NO</option>
+			<option value="1">BB_YES</option>
+		</param>
+		<param name="auto_subscription" type="radio" default="0" label="BB_AUTOSUBSCRIPTION" description="BB_AUTOSUBSCRIPTIONDESC">
+			<option value="0">BB_NO</option>
+			<option value="1">BB_YES</option>
+		</param>
+		<param name="@spacer" type="spacer" default="" label="" description="" />
+		<param name="enable_guest_name" type="radio" default="1" label="BB_ENABLEGUESTNAME" description="BB_ENABLEGUESTNAMEDESC">
+			<option value="0">BB_NO</option>
+			<option value="1">BB_YES</option>
+		</param>
+		<param name="guest_name_required" type="radio" default="1" label="BB_GUESTNAMEREQUIRED" description="BB_GUESTNAMEREQUIREDDESC">
+			<option value="0">BB_NO</option>
+			<option value="1">BB_YES</option>
+		</param>
+		<param name="@spacer" type="spacer" default="" label="" description="" />
+		<param name="latest_members_count" type="text" size="50" default="3" label="BB_LATESTMEMBERSSCOUNT" description="BB_LATESTMEMBERSSCOUNTDESC" />
+	</params>
+</install>

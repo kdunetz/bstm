@@ -1,0 +1,46 @@
+/**
+ * @version $Id: joobbeditor_yellow.css 177 2010-10-02 10:23:14Z sterob $
+ * @package Joo!BB
+ * @copyright Copyright (C) 2007-2009 Joo!BB Project. All rights reserved.
+ * @license GNU/GPL. Please see license.php in Joo!BB directory 
+ * for copyright notices and details.
+ * Joo!BB is free software. This version may have been NOT modified.
+ */
+
+.jbEditorButton {
+	margin-right: 2px;
+}
+
+a.jbEditorButton img {
+	width: 20px;
+	height: 20px;
+	margin-top: 2px;
+	border: 1px solid #cccccc !important;
+}
+
+a.jbEditorButton img:hover {
+	border: 1px solid #6a620a !important;
+	background-color: #d2d0b6;
+}
+
+.jbEditorSelect {
+    border-width: 1px;
+    width: 100px;
+    height: 25px;
+}
+
+#emotions {
+	position: absolute;
+	left: 50%;
+	z-index: 2;
+	padding: 4px 3px 3px 4px;
+	margin: 0;
+	width: 360px;
+	text-align: center !important;
+	display: none;
+	overflow: hidden;
+	background-color: #f9f9f9;
+	border: 1px solid #eee;
+	border-right-color:#bbb;
+	border-bottom-color:#bbb;
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="CM_REGISTERLAYOUT">
+		<message>
+			<![CDATA[CM_REGISTERLAYOUTDESC]]>
+		</message>
+	</layout>
+	<state>
+		<name>CM_REGISTERLAYOUT</name>
+		<description>CM_REGISTERLAYOUTDESC</description>
+	</state>
+</metadata>

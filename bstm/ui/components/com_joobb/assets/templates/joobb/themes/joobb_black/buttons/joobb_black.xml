@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install version="1.5" type="buttonset">
+	<name>Joo!BB - Black</name>
+	<author>Joo!BB Project</author>
+	<creationDate>October 2009</creationDate>
+	<copyright>(C) 2007-2009 Joo!BB Project. All rights reserved.</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<authorEmail>n/a</authorEmail>
+	<authorUrl>http://www.joobb.org</authorUrl>
+	<version>1.0.0</version>
+	<description>Joo!BB - Black Button Set for Joo!BB.</description>
+	<buttonset translateable="1">
+		<button function="buttonCancel" text="" title="BB_BUTTONCANCEL" class="jbButton jbButtonCancel" />
+		<button function="buttonDelete" text="" title="BB_BUTTONDELETE" class="jbButton jbButtonDelete" />
+		<button function="buttonEdit" text="" title="BB_BUTTONEDIT" class="jbButton jbButtonEdit" />
+		<button function="buttonGo" text="" title="BB_BUTTONGO" class="jbButton jbButtonGo" />
+		<button function="buttonLockTopic" text="" title="BB_BUTTONLOCKTOPIC" class="jbButton jbButtonLockTopic" />
+		<button function="buttonMoveTopic" text="" title="BB_BUTTONMOVETOPIC" class="jbButton jbButtonMoveTopic" />
+		<button function="buttonNewTopic" text="" title="BB_BUTTONNEWTOPIC" class="jbButton jbButtonNewTopic" />
+		<button function="buttonPostReply" text="" title="BB_BUTTONPOSTREPLY" class="jbButton jbButtonPostReply" />
+		<button function="buttonPreview" text="" title="BB_BUTTONPREVIEW" class="jbButton jbButtonPreview" />
+		<button function="buttonQuote" text="" title="BB_BUTTONQUOTE" class="jbButton jbButtonQuote" />
+		<button function="buttonReportPost" text="" title="BB_BUTTONREPORT" class="jbButton jbButtonReport" />
+		<button function="buttonSearch" text="" title="BB_BUTTONSEARCH" class="jbButton jbButtonSearch" />
+		<button function="buttonSubmit" text="" title="BB_BUTTONSUBMIT" class="jbButton jbButtonSubmit" />
+		<button function="buttonUnlockTopic" text="" title="BB_BUTTONUNLOCKTOPIC" class="jbButton jbButtonUnlockTopic" />
+	</buttonset>
+	<sampleImage>joobb_black.png</sampleImage>
+</install>

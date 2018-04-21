@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<install type="plugin" version="1.5" group="editors-bb" client="both" method="upgrade">
+    <name>Editor - Joo!BB</name>
+	<author>Joo!BB Project</author>
+	<creationDate>October 2010</creationDate>
+	<copyright>(C) 2007-2010 Joo!BB Project. All rights reserved.</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<authorEmail>n/a</authorEmail>
+	<authorUrl>http://www.joobb.org</authorUrl>
+	<version>1.0.0 Phobos RC3</version>
+    <description>Joo!BB - Bulletin Board Editor</description>
+	<params addpath="/plugins/editors-bb/joobb/elements">
+		<param name="emotions_per_row" type="text" default="26" label="BB_LABELEMOTIONSPERROW" description="BB_LABELEMOTIONSPERROWDESC" />
+		<param name="@spacer" type="spacer" default="" label="" description="" />
+		<param name="editor_style" type="joobbeditorstyles" default="" label="BB_EDITORSTYLE" description="BB_EDITORSTYLEDESC" />
+	</params>
+	<params group="advanced">
+ 		<param name="show_button_bold" type="radio" default="1" label="BB_LABELBUTTONBOLD" description="BB_LABELBUTTONBOLDDESC">
+ 			<option value="0">BB_HIDE</option>
+ 			<option value="1">BB_SHOW</option>
+ 		</param>
+ 		<param name="show_button_italic" type="radio" default="1" label="BB_LABELBUTTONITALIC" description="BB_LABELBUTTONITALICDESC">
+ 			<option value="0">BB_HIDE</option>
+ 			<option value="1">BB_SHOW</option>
+ 		</param>
+ 		<param name="show_button_underline" type="radio" default="1" label="BB_LABELBUTTONUNDERLINE" description="BB_LABELBUTTONUNDERLINEDESC">
+ 			<option value="0">BB_HIDE</option>
+ 			<option value="1">BB_SHOW</option>
+ 		</param>
+  		<param name="show_button_strikeout" type="radio" default="1" label="BB_LABELBUTTONSTRIKEOUT" description="BB_LABELBUTTONSTRIKEOUTDESC">
+ 			<option value="0">BB_HIDE</option>
+ 			<option value="1">BB_SHOW</option>
+ 		</param>
+  		<param name="show_button_left" type="radio" default="1" label="BB_LABELBUTTONLEFT" description="BB_LABELBUTTONLEFTDESC">
+ 			<option value="0">BB_HIDE</option>
+ 			<option value="1">BB_SHOW</option>
+ 		</param>
+ 		<param name="show_button_center" type="radio" default="1" label="BB_LABELBUTTONCENTER" description="BB_LABELBUTTONCENTERDESC">
+ 			<option value="0">BB_HIDE</option>
+ 			<option value="1">BB_SHOW</option>
+ 		</param>
+ 		<param name="show_button_right" type="radio" default="1" label="BB_LABELBUTTONRIGHT" description="BB_LABELBUTTONRIGHTDESC">
+ 			<option value="0">BB_HIDE</option>
+ 			<option value="1">BB_SHOW</option>
+ 		</param>
+ 		<param name="show_button_justify" type="radio" default="1" label="BB_LABELBUTTONJUSTIFY" description="BB_LABELBUTTONJUSTIFYDESC">
+ 			<option value="0">BB_HIDE</option>
+ 			<option value="1">BB_SHOW</option>
+ 		</param>
+  		<param name="show_button_image" type="radio" default="1" label="BB_LABELBUTTONIMAGE" description="BB_LABELBUTTONIMAGEDESC">
+ 			<option value="0">BB_HIDE</option>
+ 			<option value="1">BB_SHOW</option>
+ 		</param>
+ 		<param name="show_button_url" type="radio" default="1" label="BB_LABELBUTTONURL" description="BB_LABELBUTTONURLDESC">
+ 			<option value="0">BB_HIDE</option>
+ 			<option value="1">BB_SHOW</option>
+ 		</param>
+ 		<param name="show_button_email" type="radio" default="1" label="BB_LABELBUTTONEMAIL" description="BB_LABELBUTTONEMAILDESC">
+ 			<option value="0">BB_HIDE</option>
+ 			<option value="1">BB_SHOW</option>
+ 		</param>
+ 		<param name="show_button_code" type="radio" default="1" label="BB_LABELBUTTONCODE" description="BB_LABELBUTTONCODEDESC">
+ 			<option value="0">BB_HIDE</option>
+ 			<option value="1">BB_SHOW</option>
+ 		</param>
+ 		<param name="show_button_bullist" type="radio" default="1" label="BB_LABELBUTTONBULLIST" description="BB_LABELBUTTONBULLISTDESC">
+ 			<option value="0">BB_HIDE</option>
+ 			<option value="1">BB_SHOW</option>
+ 		</param>
+  		<param name="show_button_bollist" type="radio" default="1" label="BB_LABELBUTTONBOLLIST" description="BB_LABELBUTTONBOLLISTDESC">
+ 			<option value="0">BB_HIDE</option>
+ 			<option value="1">BB_SHOW</option>
+ 		</param>
+   		<param name="show_button_youtube" type="radio" default="1" label="BB_LABELBUTTONYOUTUBE" description="BB_LABELBUTTONYOUTUBEDESC">
+ 			<option value="0">BB_HIDE</option>
+ 			<option value="1">BB_SHOW</option>
+ 		</param>
+    	<param name="show_button_gvideo" type="radio" default="1" label="BB_LABELBUTTONGVIDEO" description="BB_LABELBUTTONGVIDEODESC">
+ 			<option value="0">BB_HIDE</option>
+ 			<option value="1">BB_SHOW</option>
+ 		</param>
+    	<param name="show_button_emotions" type="radio" default="1" label="BB_LABELBUTTONEMOTIONS" description="BB_LABELBUTTONEMOTIONSDESC">
+ 			<option value="0">BB_HIDE</option>
+ 			<option value="1">BB_SHOW</option>
+ 		</param>
+    	<param name="show_button_superscript" type="radio" default="1" label="BB_LABELBUTTONSUPERSCRIPT" description="BB_LABELBUTTONSUPERSCRIPTDESC">
+ 			<option value="0">BB_HIDE</option>
+ 			<option value="1">BB_SHOW</option>
+ 		</param>
+    	<param name="show_button_subscript" type="radio" default="1" label="BB_LABELBUTTONSUBSCRIPT" description="BB_LABELBUTTONSUBSCRIPTDESC">
+ 			<option value="0">BB_HIDE</option>
+ 			<option value="1">BB_SHOW</option>
+ 		</param>
+ 		<param name="show_combo_font" type="radio" default="1" label="BB_LABELSELECTFONT" description="BB_LABELSELECTFONTDESC">
+ 			<option value="0">BB_HIDE</option>
+ 			<option value="1">BB_SHOW</option>
+ 		</param>
+ 		<param name="show_combo_size" type="radio" default="1" label="BB_LABELSELECTSIZE" description="BB_LABELSELECTSIZEDESC">
+ 			<option value="0">BB_HIDE</option>
+ 			<option value="1">BB_SHOW</option>
+ 		</param>
+ 		<param name="show_combo_color" type="radio" default="1" label="BB_LABELSELECTCOLOR" description="BB_LABELSELECTCOLORDESC">
+ 			<option value="0">BB_HIDE</option>
+ 			<option value="1">BB_SHOW</option>
+ 		</param>
+ 		<param name="show_combo_table" type="radio" default="1" label="BB_LABELSELECTTABLE" description="BB_LABELSELECTTABLEDESC">
+ 			<option value="0">BB_HIDE</option>
+ 			<option value="1">BB_SHOW</option>
+ 		</param>
+	</params>
+	<files>
+		<filename plugin="joobb">joobb.php</filename>
+		<folder>joobb</folder>
+	</files>
+</install>

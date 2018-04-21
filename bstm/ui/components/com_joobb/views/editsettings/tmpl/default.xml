@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="BB_EDITSETTINGSLAYOUT">
+		<message>
+			<![CDATA[BB_EDITSETTINGSLAYOUTDESC]]>
+		</message>
+	</layout>
+	<state>
+		<name>BB_EDITSETTINGSLAYOUT</name>
+		<description>BB_EDITSETTINGSLAYOUTDESC</description>
+	</state>
+</metadata>

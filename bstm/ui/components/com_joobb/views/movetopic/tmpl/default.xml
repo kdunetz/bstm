@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="BB_MOVETOPICLAYOUT">
+		<message>
+			<![CDATA[BB_MOVETOPICLAYOUTDESC]]>
+		</message>
+	</layout>
+	<state>
+		<name>BB_MOVETOPICLAYOUT</name>
+		<description>BB_MOVETOPICLAYOUTDESC</description>
+	</state>
+</metadata>
