@@ -1,0 +1,6 @@
+---
+applications:
+- name: bstm
+memory: 256M
+instances: 1
+host: bstm 
