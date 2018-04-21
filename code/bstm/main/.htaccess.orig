@@ -1,0 +1,6 @@
+#Options +FollowSymLinks
+#RewriteEngine on
+#RewriteRule how_much_is_(.*)\.htm$ index.php?view=search&action=search&searchword=$1
+#RewriteRule how_much_is_(.*)\.html index.php?view=search&action=search&searchword=$1
+#RewriteRule what_is_price_for_(.*)\.htm$ index.php?view=search&action=search&searchword=$1
+#RewriteRule what_is_price_for_(.*)\.html$ index.php?view=search&action=search&searchword=$1

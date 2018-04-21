@@ -59,5 +59,5 @@ if ($mobile_browser > 0 && !isset($_GET['override_redirect']) && !$override_redi
 }
 else
 {
-   tep_redirect('http://bstm.trybats.com/bstm/main/index.php');
+   tep_redirect('/bstm/main/index.php');
 }

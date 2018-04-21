@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: bstm 
+spec:
+  type: NodePort
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: bstm
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: bstm
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: bstm 
+    spec:
+      containers:
+      - name: bstm 
+        image: kdunetz/bstm:1.0
+        imagePullPolicy: Always 
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        ports:
+        - containerPort: 80
