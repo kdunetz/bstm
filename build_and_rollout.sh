@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IMAGE=kdunetz/bstm:2.0
+IMAGE=kdunetz/bstm:$BUILD_NUMBER
 NAMESPACE=kdunetz
 NAME=bstm
 
