@@ -281,7 +281,7 @@ if (!tep_session_is_registered('user_id')) {
       $id = "id=\"active_menu-nav\"";
       $breadCrumb = "How It Works";
    }
-   echo "<li><a href=\"index.php?view=how_it_works&action=display\" class=\"mainlevel-nav\"" . $id . " >How It Works Test KAD KAD</a></li>\n";
+   echo "<li><a href=\"index.php?view=how_it_works&action=display\" class=\"mainlevel-nav\"" . $id . " >How It Works Test KAD KAD 9:41PM</a></li>\n";
    $id = "";
    if (strpos($_SERVER['REQUEST_URI'], "view=register") !== false)
    {
