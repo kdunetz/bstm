@@ -1,7 +1,7 @@
 #!/bin/bash
 
 IMAGE=kdunetz/bstm:1.0
-NAMESPACE=kdunetz
+NAMESPACE=default
 NAME=bstm
 
 if [ -z "$IMAGE" ]
@@ -13,5 +13,6 @@ fi
 docker build -t $IMAGE .
 docker push $IMAGE 
 
-kubectl set image deployment/$NAME $NAME=$IMAGE -n $NAMESPACE
+kubectl delete -f deploy_and_service.yml
+kubectl create -f deploy_and_service.yml
 
